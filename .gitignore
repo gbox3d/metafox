@@ -131,3 +131,6 @@ dmypy.json
 *.pt
 
 config.yaml
+*.png
+*.jpg
+!bus.jpg

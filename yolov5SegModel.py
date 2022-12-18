@@ -26,9 +26,12 @@ class Yolov5SegModel():
         self.imgsz = check_img_size(imgsz, s=self.stride)  # check image size
         self.model.warmup(imgsz=(1 if self.pt else bs, 3, *imgsz))  # warmup
         
+        self.__version__ = '0.0.1'
+    
+        
     def predict(self,img,classes=None,conf_thres=0.25,iou_thres=0.45,max_det=1000,agnostic_nms=False,retina_masks=False):
         im = letterbox(img, new_shape=self.imgsz)[0]
-        im = img.transpose(2, 0, 1)[None]
+        im = im.transpose(2, 0, 1)[None]
         im = np.ascontiguousarray(im)  # contiguous
     
         im = torch.from_numpy(im).to( self.model.device)
