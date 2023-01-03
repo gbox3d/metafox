@@ -15,7 +15,7 @@ import os
 from struct import *
 from pathlib import Path
 
-from http.server import BaseHTTPRequestHandler,HTTPServer
+from http.server import BaseHTTPRequestHandler,HTTPServer,SimpleHTTPRequestHandler
 
 import shapely
 from shapely.geometry import Point, Polygon, LineString, GeometryCollection
@@ -39,8 +39,14 @@ from http_thread import httpServerThread
 
 #%%
 _out_img = None
-class myHandler(BaseHTTPRequestHandler):
-	
+class myHandler(SimpleHTTPRequestHandler):
+    
+    def end_headers (self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET')
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+        return super(myHandler, self).end_headers()
+    
 	#Handler for the GET requests
     def do_GET(self):
         
@@ -48,9 +54,14 @@ class myHandler(BaseHTTPRequestHandler):
     
         try:
             if self.path=="/getimg":
-                self.send_response(200)
+                self.send_response(200,"ok")
+                # self.send_header('Access-Control-Allow-Origin', '*')
+                # self.send_header('Access-Control-Allow-Methods', 'GET')
+                # self.send_header("Access-Control-Allow-Headers", "Content-type")
+                
                 self.send_header('Content-type','image/png')
                 self.end_headers()
+                
                 if _out_img is not None :
                     # encode_param=[int(cv.IMWRITE_JPEG_QUALITY),90]
                     _,_encodee_img = cv.imencode('.png',_out_img, [int(cv.IMWRITE_PNG_COMPRESSION), 0])
