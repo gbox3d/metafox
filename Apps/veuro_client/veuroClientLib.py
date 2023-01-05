@@ -7,15 +7,6 @@ import io
 from PIL import Image, ImageDraw, ImageFont
 from IPython.display import display
 
-#%%
-with open('config.yaml', 'r') as f:
-        
-    config_data = yaml.load(f,Loader=yaml.FullLoader)
-    
-    print(config_data)
-    server_ip = config_data['server_ip']
-    port = config_data['port']
-    buff_size = config_data['buff_size']
 
 
 # %%
@@ -101,6 +92,14 @@ class veroTcpClient:
         
 #%%
 if __name__ == '__main__' :
+    with open('config.yaml', 'r') as f:
+        
+        config_data = yaml.load(f,Loader=yaml.FullLoader)
+        
+        print(config_data)
+        server_ip = config_data['server_ip']
+        port = config_data['port']
+        buff_size = config_data['buff_size']
     checkcode = 20221223
     _sender = veroTcpClient(server_ip,port,checkcode,buff_size)
     while True :
